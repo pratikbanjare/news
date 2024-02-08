@@ -89,5 +89,39 @@ public class NewsApiCaller {
         return response.body();
     }
 
+    public String getEverythingWithinCaller (String q, String from, String to){
+        StringBuilder sb = new StringBuilder();
+        String completeUrl = sb.append(everythingUrl)
+                .append("?")
+                .append("sources=")
+                .append(q)
+                .append("&")
+                .append("from=")
+                .append(from)
+                .append("&")
+                .append("to=")
+                .append(to)
+                .append("&")
+                .append("apiKey=")
+                .append(apiKey)
+                .toString();
+
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(completeUrl))
+                .GET()
+                .build();
+
+        System.out.println("Request URI --> " + request.uri());
+        HttpResponse<String> response = null;
+        try {
+            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.print("Status Code of the call -> " + response.statusCode());
+        return response.body();
+
+    }
+
 
 }

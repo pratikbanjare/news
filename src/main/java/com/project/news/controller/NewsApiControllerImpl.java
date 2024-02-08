@@ -37,5 +37,12 @@ public class NewsApiControllerImpl implements NewsApiController {
         return newsApiCaller.getEverythingWithCaller(q);
     }
 
+    @Override
+    @GetMapping(path = "api/everythingWithin")
+    public String getEverythingWithin(@RequestParam String q, @RequestParam String from, @RequestParam String to) {
+
+        return newsApiCaller.getEverythingWithinCaller(q, from, to);
+    }
+
 
 }
