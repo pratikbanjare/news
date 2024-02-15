@@ -1,6 +1,8 @@
 package com.project.news.api;
 
 
+import com.project.news.client.NewsClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -18,27 +20,22 @@ public class NewsApiCaller {
     private String apiKey;
 
     @Value(("${url.headline}"))
-    private String healineUrl;
+    private String headlineUrl;
 
     @Value("${url.everything}")
     private String everythingUrl;
 
-    private HttpClient httpClient;
+    @Autowired
+    private NewsClient newsClient;
 
     public NewsApiCaller() {
-        httpClient = HttpClient.newBuilder()
-                .version(HttpClient.Version.HTTP_2)
-                .followRedirects(HttpClient.Redirect.NORMAL)
-                .connectTimeout(Duration.ofSeconds(20))
-                .build();
-    }
 
+    }
 
     public String getTopNewsHeadlineFrom(String sources) {
 
-        try {
             StringBuilder sb = new StringBuilder();
-            String completeUrl = sb.append(healineUrl)
+            String completeUrl = sb.append(headlineUrl)
                     .append("?")
                     .append("sources=")
                     .append(sources)
@@ -46,19 +43,10 @@ public class NewsApiCaller {
                     .append("apiKey=")
                     .append(apiKey).toString();
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(completeUrl))
-                    .GET()
-                    .build();
+            HttpRequest request = newsClient.createHtpGetRequest(completeUrl);
             System.out.println("Request URI --> " + request.uri());
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-            System.out.print("Status Code of the call -> " + response.statusCode());
-            return response.body();
-
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+            return newsClient.httpRequestCall(request);
     }
 
     public String getEverythingWithCaller(String q) {
@@ -73,20 +61,10 @@ public class NewsApiCaller {
                 .append(apiKey)
                 .toString();
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(completeUrl))
-                .GET()
-                .build();
+        HttpRequest request = newsClient.createHtpGetRequest(completeUrl);
         System.out.println("Request URI --> " + request.uri());
-        HttpResponse<String> response = null;
-        try {
-            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
 
-        System.out.print("Status Code of the call -> " + response.statusCode());
-        return response.body();
+        return newsClient.httpRequestCall(request);
     }
 
     public String getEverythingWithinCaller (String q, String from, String to){
@@ -106,21 +84,10 @@ public class NewsApiCaller {
                 .append(apiKey)
                 .toString();
 
-        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(completeUrl))
-                .GET()
-                .build();
+        HttpRequest request = newsClient.createHtpGetRequest(completeUrl);
 
         System.out.println("Request URI --> " + request.uri());
-        HttpResponse<String> response = null;
-        try {
-            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        System.out.print("Status Code of the call -> " + response.statusCode());
-        return response.body();
-
+        return newsClient.httpRequestCall(request);
     }
 
 
