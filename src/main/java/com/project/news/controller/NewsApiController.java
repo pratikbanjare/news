@@ -13,4 +13,7 @@ public interface NewsApiController {
 
     // New: download everything as a file (bulk JSON) with optional date range
     ResponseEntity<byte[]> downloadEverything(String q, LocalDate from, LocalDate to);
+
+    // New: download everything and optionally expand articles by scraping full article pages
+    ResponseEntity<byte[]> downloadEverythingExpanded(String q, LocalDate from, LocalDate to, Boolean expandFull);
 }

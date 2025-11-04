@@ -45,6 +45,13 @@
 			<version>2.1.0</version>
 		</dependency>
 
+        <!-- Jsoup for HTML parsing to extract full article text when requested -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.16.1</version>
+        </dependency>
+
 	</dependencies>
 
 	<build>

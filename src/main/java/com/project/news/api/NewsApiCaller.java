@@ -80,7 +80,7 @@ public class NewsApiCaller {
         String encodedTo = encode(to);
         String completeUrl = sb.append(everythingUrl)
                 .append("?")
-                .append("sources=")
+                .append("q=")
                 .append(encodedQ)
                 .append("&")
                 .append("from=")
@@ -133,11 +133,8 @@ public class NewsApiCaller {
         HttpRequest request = newsClient.createHtpGetRequest(completeUrl);
         System.out.println("Request URI --> " + request.uri());
 
-        String response = newsClient.httpRequestCall(request);
-        if (response == null) {
-            return new byte[0];
-        }
-        return response.getBytes(StandardCharsets.UTF_8);
+        // Use byte-array handler to avoid String truncation or encoding issues
+        return newsClient.httpRequestCallBytes(request);
     }
 
 

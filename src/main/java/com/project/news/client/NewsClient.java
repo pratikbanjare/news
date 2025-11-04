@@ -33,9 +33,22 @@ public class NewsClient {
         }
     }
 
+    // New method: returns raw bytes for large/binary responses (avoids any string-size/truncation issues)
+    public byte[] httpRequestCallBytes(HttpRequest request) {
+        try {
+            HttpResponse<byte[]> response = httpClient.send(request, HttpResponse.BodyHandlers.ofByteArray());
+            System.out.print("Status Code of the call -> " + response.statusCode());
+            return response.body();
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public HttpRequest createHtpGetRequest (String completeUrl){
+        // Defensive: ensure spaces in the URL are encoded to %20 to avoid IllegalArgumentException from URI.create
+        String safeUrl = (completeUrl == null) ? null : completeUrl.replace(" ", "%20");
         return HttpRequest.newBuilder()
-                .uri(URI.create(completeUrl))
+                .uri(URI.create(safeUrl))
                 .GET()
                 .build();
     }
